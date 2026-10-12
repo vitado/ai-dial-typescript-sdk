@@ -16,4 +16,9 @@ jobs:
   sca:
     uses: vitado/ai-dial-ci/.github/workflows/sca_scheduled.yml@pilot/sca-next
     with:
+      # Policy the repository would carry in .github/sca.yml (the fork scans epam/* and cannot commit there)
+      config: |
+        schema_version: 1
+        non_shipped_paths:
+          - website/
       repository: epam/ai-dial-typescript-sdk
