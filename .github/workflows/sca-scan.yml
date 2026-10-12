@@ -1,0 +1,24 @@
+name: SCA Scan
+
+# Pilot caller on the fork: manual runs only, the schedule is added when rolled out upstream.
+on:
+  workflow_dispatch: {}
+
+concurrency:
+  group: sca-scan
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  sca:
+    uses: vitado/ai-dial-ci/.github/workflows/sca_scheduled.yml@pilot/sca-scheduled
+    with:
+      # Policy the repository would carry in .github/sca.yml (the fork scans epam/* and cannot commit there)
+      config: |
+        schema_version: 1
+        non_shipped_paths:
+          - website/
+      repository: epam/ai-dial-typescript-sdk
