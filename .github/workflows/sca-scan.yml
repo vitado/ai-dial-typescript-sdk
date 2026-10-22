@@ -1,11 +1,8 @@
 name: SCA Scan
 
-# Pilot caller on the fork: manual runs only, the schedule is added when rolled out upstream.
+# Manual runs only (workflow_dispatch). Calls the engine wrapper in vitado/ai-dial-ci.
 
 on:
-  schedule:
-    # hourly pilot schedule (temporary): validating the schedule path of the contour
-    - cron: "41 * * * *"
   workflow_dispatch:
     inputs:
       scan-tag:
@@ -18,9 +15,7 @@ on:
         default: false
 
 run-name: >-
-  ${{ github.event_name == 'schedule' && 'SCA - scheduled'
-  || format('SCA - manual by {0}{1}', github.triggering_actor,
-     inputs.scan-tag && format(' - tag {0}', inputs.scan-tag) || '') }}
+  SCA - manual by ${{ github.triggering_actor }}${{ inputs.scan-tag && format(' - tag {0}', inputs.scan-tag) || '' }}
 
 concurrency:
   group: sca-scan
@@ -32,7 +27,7 @@ permissions:
 
 jobs:
   sca:
-    uses: vitado/ai-dial-ci/.github/workflows/sca_scheduled.yml@pilot/sca-split
+    uses: vitado/ai-dial-ci/.github/workflows/sca_scheduled.yml@sca-scheduled
     with:
       repository: epam/ai-dial-typescript-sdk
       scan-tag: ${{ inputs.scan-tag }}
